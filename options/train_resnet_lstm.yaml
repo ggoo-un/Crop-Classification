@@ -1,0 +1,40 @@
+  task : resnet_lstm
+  gpu_ids : [0]
+
+  datasets:
+    train:
+      name: train_dataset
+      dataroot: data/train/train
+      dataloader_shuffle: true
+      dataloader_num_workers: 8
+      dataloader_batch_size: 16
+    val:
+      name: val_dataset
+      dataroot: data/train/val
+
+  path:
+    root: crop_classification
+    pretrained_net: null
+
+  net:
+    net_type: resnet_lstm #resnet_lstm | SwinTR_large_patch4_window7_224_in22k
+    max_len : 144         #24*6  24hour * (10 per minutes = 6)
+    embedding_dim : 512
+    num_features : 9    # len(csv_feature_dict)
+    class_n : 111          # len(label)
+    dropout_rate : 0.1
+
+#    init_type: trunc_normal # "orthogonal" | "normal" | "uniform" | "xavier_normal" | "xavier_uniform" | "kaiming_normal" | "kaiming_uniform"
+#    init_bn_type: constant # "uniform" | "constant"
+#    init_gain: 0.2
+
+  train:
+    lossfn_type: CrossEntropy # "CrossEntropy"
+    lossfn_weight: 1
+
+    scheduler_type: MultiStepLR # "MultiStepLR" | "CyclicLR"
+    scheduler_milestones: [1000000]
+    scheduler_gamma: 0.5
+
+    optimizer_type: adam
+    optimizer_lr: !!float 1e-4
